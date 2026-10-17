@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkCheck - Verify Job Adverts</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#f4f6f8;color:#111}
+header{background:#0b5ed7;color:white;padding:20px;text-align:center}
+header h1{margin:0;font-size:28px}
+header p{margin:5px 0 0;opacity:.9}
+.container{max-width:800px;margin:20px auto;padding:0 15px}
+.card{background:white;border-radius:12px;padding:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+textarea,input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin:8px 0;font-size:15px}
+button{background:#0b5ed7;color:white;border:none;padding:13px 20px;border-radius:8px;font-weight:bold;cursor:pointer;width:100%;font-size:16px}
+.result{padding:15px;border-radius:10px;margin-top:15px;font-weight:bold}
+.safe{background:#d1e7dd;color:#0f5132}
+.warn{background:#fff3cd;color:#664d03}
+.danger{background:#f8d7da;color:#842029}
+ul{padding-left:20px}
+li{margin:6px 0}
+.badge{display:inline-block;background:#e7f1ff;color:#0b5ed7;padding:5px 10px;border-radius:20px;font-size:13px;margin:3px}
+</style>
+</head>
+<body>
+<header>
+<h1>✅ WorkCheck</h1>
+<p>Verify job adverts to stop scams</p>
+</header>
+<div class="container">
+<div class="card">
+<h2>🔍 Check a Job Advert</h2>
+<p>Paste the job advert text, or type the company / phone / email you saw:</p>
+<textarea id="jobText" rows="6" placeholder="Paste job advert here... Example: Work from home R15000 per month, pay R500 training fee via WhatsApp 082..."></textarea>
+<button onclick="checkJob()">Check Now</button>
+<div id="result"></div>
+</div>
+<div class="card">
+<h3>🚩 Common Scam Signs</h3>
+<ul>
+<li>Asks for upfront payment / training fee</li>
+<li>Uses only WhatsApp / Gmail, no official website</li>
+<li>Salary too high for no experience</li>
+<li>Urgent pressure: "Apply now or lose it"</li>
+<li>Asks for ID, bank details or OTP early</li>
+</ul>
+</div>
+<div class="card">
+<h3>✅ Safe Job Signs</h3>
+<span class="badge">Official Website</span>
+<span class="badge">Company Reg Number</span>
+<span class="badge">Interview In Person</span>
+<span class="badge">No Upfront Fees</span>
+</div>
+<div class="card"><p style="text-align:center;color:#666">Made in South Africa 🇿🇦 to protect job seekers</p></div>
+</div>
+<script>
+function checkJob(){
+let text=document.getElementById('jobText').value.toLowerCase();
+let res=document.getElementById('result');
+if(!text){res.innerHTML='<div class="result warn">Please paste a job advert first.</div>';return;}
+let score=0;let reasons=[];
+if(text.includes('training fee')||text.includes('pay')&&text.includes('r')||text.includes('upfront')||text.includes('registration fee')){score+=3;reasons.push('Asks for payment / fee')}
+if(text.includes('whatsapp')){score+=1;reasons.push('Uses WhatsApp only')}
+if(text.includes('urgent')||text.includes('immediately')){score+=1;reasons.push('Urgent pressure')}
+if(text.includes('r15000')||text.includes('r20000')||text.includes('r25000')||text.includes('no experience')){score+=1;reasons.push('Very high salary for no experience')}
+if(text.includes('otp')||text.includes('bank details')||text.includes('id number')){score+=2;reasons.push('Asks for sensitive info')}
+if(text.includes('.co.za')||text.includes('www.')||text.includes('interview')){score-=1;reasons.push('Has website / interview process')}
+let html='';
+if(score>=3) html='<div class="result danger">🔴 HIGH RISK - Likely Scam<br>'+reasons.join(' • ')+'</div>';
+else if(score>=1) html='<div class="result warn">🟡 MEDIUM RISK - Be Cautious<br>'+reasons.join(' • ')+'</div>';
+else html='<div class="result safe">🟢 LOW RISK - Looks Safer<br>Still verify the company on Google and CIPC.</div>';
+res.innerHTML=html;
+}
+</script>
+</body>
+  </html>
